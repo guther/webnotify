@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Teste Messaging2</title>    
+    
+    <!-- Remember to include jQuery :) -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+	<!-- jQuery Modal -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+
     <script>
 		
 var worker;
@@ -48,6 +56,12 @@ function fnc_show_notification(notification){
       icon: notification.icon,
       body: notification.body
     });
+    notification.onclick = 
+		function(){
+			$('#modal_notification .title').html(notification.title);
+			$('#modal_notification .body').html(notification.body);
+			$('#modal_notification').modal();
+		};
 }
 
 function fnc_check_notification(notification){
@@ -109,6 +123,13 @@ document.addEventListener('DOMContentLoaded', fnc_init);
 
 </head>
 <body>
+	
+	<!-- Modal HTML embedded directly into document -->
+<div id="modal_notification" class="modal">
+  <h1 class="title"></h1>
+  <p class="body">Thanks for clicking. That felt good.</p>
+  <a href="#" rel="modal:close">[Fechar]</a>
+</div>
     
 </body>
 </html>
