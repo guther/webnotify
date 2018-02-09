@@ -76,17 +76,32 @@ function fnc_check_message(e){
 function fnc_show_notification(notification){
 	alert(77);
 	alert(notification.title)
-	var n = new Notification(notification.title, {
-      icon: notification.icon,
-      body: notification.body
-    });
-    alert(n);
-    n.onclick = 
-		function(){
-			$('#modal_notification .title').html(notification.title);
-			$('#modal_notification .body').html(notification.body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
-			$('#modal_notification').modal();
-		};
+	try{
+		var n = new Notification(notification.title, {
+		  icon: notification.icon,
+		  body: notification.body
+		});
+		n.onclick = 
+			function(){
+				$('#modal_notification .title').html(notification.title);
+				$('#modal_notification .body').html(notification.body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+				$('#modal_notification').modal();
+			};
+	catch(e){
+		navigator.serviceWorker.register('worker_notify.js');
+		
+		navigator.serviceWorker.ready.then(
+			function(registration) {
+				registration.showNotification(notification.title, {
+					  body: notification.body,
+					  icon: notification.icon,
+					  vibrate: [200, 100, 200, 100, 200, 100, 200],
+					  tag: 'vibration-sample'
+					});
+			}
+		);
+		
+	}
 	alert(99)
 }
 function fnc_init_worker(){
