@@ -91,7 +91,7 @@ function fnc_show_notification(notification){
 }
 function fnc_init_worker(){
 	
-		var json = '{"id":"1","notificacao":{"icon":"http:\/\/cdn.sstatic.net\/stackexchange\/img\/logos\/so\/so-icon.png","title":"Notifica\u00e7\u00e3o Alt Lab 1","body":"Descri\u00e7\u00e3o qualquer.\r\nPiada curta: Conversa de casados: Querido, o que voc\u00ea prefere? Uma mulher bonita ou uma mulher inteligente?\r\nNem uma, nem outra. Voc\u00ea sabe que eu s\u00f3 gosto de voc\u00ea. "}}';
+		var json = {"id":"1","notificacao":{"icon":"http:\/\/cdn.sstatic.net\/stackexchange\/img\/logos\/so\/so-icon.png","title":"Notifica\u00e7\u00e3o Alt Lab 1","body":"Descri\u00e7\u00e3o qualquer.\r\nPiada curta: Conversa de casados: Querido, o que voc\u00ea prefere? Uma mulher bonita ou uma mulher inteligente?\r\nNem uma, nem outra. Voc\u00ea sabe que eu s\u00f3 gosto de voc\u00ea. "}};
 		
 		var notification = JSON.parse(json);
 		fnc_show_notification(notification.notificacao);
