@@ -51,23 +51,6 @@ function fnc_set_local_notification_id(antigo_id, notification){
 	}
 }
 
-function fnc_show_notification(notification){
-	alert(77);
-	alert(notification)
-	var n = new Notification(notification.title, {
-      icon: notification.icon,
-      body: notification.body
-    });
-    alert(n);
-    n.onclick = 
-		function(){
-			$('#modal_notification .title').html(notification.title);
-			$('#modal_notification .body').html(notification.body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
-			$('#modal_notification').modal();
-		};
-	alert(99)
-}
-
 function fnc_check_notification(notification){
 	// recebe o ID da última notificação apresentada
 	var notification_id = fnc_get_local_notification_id();
@@ -90,14 +73,28 @@ function fnc_check_message(e){
 		}
 	}
 }
+function fnc_show_notification(notification){
+	alert(77);
+	alert(notification.title)
+	var n = new Notification(notification.title, {
+      icon: notification.icon,
+      body: notification.body
+    });
+    alert(n);
+    n.onclick = 
+		function(){
+			$('#modal_notification .title').html(notification.title);
+			$('#modal_notification .body').html(notification.body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+			$('#modal_notification').modal();
+		};
+	alert(99)
+}
 function fnc_init_worker(){
-	if (Notification.permission === "granted"){
-		worker = new Worker('worker_notify.js');
-		worker.addEventListener('message', fnc_check_message);
-		worker.postMessage({'cmd': 'start', 'notification_id': fnc_get_local_notification_id() });
-	}
-	else
-		alert(555)
+	
+		var json = '{"id":"1","notificacao":{"icon":"http:\/\/cdn.sstatic.net\/stackexchange\/img\/logos\/so\/so-icon.png","title":"Notifica\u00e7\u00e3o Alt Lab 1","body":"Descri\u00e7\u00e3o qualquer.\r\nPiada curta: Conversa de casados: Querido, o que voc\u00ea prefere? Uma mulher bonita ou uma mulher inteligente?\r\nNem uma, nem outra. Voc\u00ea sabe que eu s\u00f3 gosto de voc\u00ea. "}}';
+		
+		var notification = JSON.parse(json);
+		fnc_show_notification(notification.notificacao);
 }
 
 function fnc_init(){
