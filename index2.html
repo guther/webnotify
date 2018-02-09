@@ -99,12 +99,10 @@ function fnc_show_notification(notification){
 					  vibrate: [200, 100, 200, 100, 200, 100, 200],
 					  tag: 'vibration-sample'
 					});
-			}
-			
-			
-			navigator.serviceWorker.onnotificationclick = function(event) { alert(1233)};
-			
-		);
+				
+				registration.onnotificationclick = function(event) { alert(1233)};
+				
+		});
 		
 		ServiceWorkerGlobalScope.onnotificationclick = function(NotificationEvent) { alert(3333) };
 		
