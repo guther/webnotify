@@ -68,6 +68,8 @@ function fnc_check_notification(notification){
 	// recebe o ID da última notificação apresentada
 	var notification_id = fnc_get_local_notification_id();
 	
+	alert(notification_id);
+	
 	// armazena o ID mais recente
 	fnc_set_local_notification_id(notification_id, notification);
 }
@@ -80,6 +82,7 @@ function fnc_check_message(e){
 				break;
 			case 'json':
 				var json = e.data.json;
+				alert(json);
 				var notification = JSON.parse(json);
 				fnc_check_notification(notification);
 				break;			
@@ -88,10 +91,13 @@ function fnc_check_message(e){
 }
 function fnc_init_worker(){
 	if (Notification.permission === "granted"){
+		alert(123);
 		worker = new Worker('worker_notify.js');
 		worker.addEventListener('message', fnc_check_message);
 		worker.postMessage({'cmd': 'start', 'notification_id': fnc_get_local_notification_id() });
 	}
+	else
+		alert(555)
 }
 
 function fnc_init(){
@@ -109,7 +115,6 @@ function fnc_init(){
 			alert('Por favor, permita as notificações dos eventos para manter-se atualizado.');
 			return;
 		  }
-		  alert(result);
 		  fnc_init_worker();
 		});
 	}
