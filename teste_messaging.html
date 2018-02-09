@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Teste Messaging2</title>    
+    <script>
+		
+var worker;
+
+function fnc_get_local_notification_id(){
+	var notification_id = parseInt(localStorage.getItem("notification_id"));
+	// se não existe qualquer notificação no localStorage
+	if(isNaN(notification_id)){
+		return false;
+	}
+	// se existe notificação no localStorage
+	else{
+		return notification_id;
+	}
+}
+
+function fnc_set_local_notification_id(antigo_id, notification){
+	var novo_id = parseInt(notification.id);
+	
+	// se existe ID
+	if(antigo_id){
+		// checa se existe notificação mais recente
+		if(novo_id > antigo_id){
+			localStorage.setItem("notification_id", novo_id);
+			// apresenta a notificação
+			fnc_show_notification(notification.notificacao);
+			worker.postMessage({'cmd': 'set_time_start', 'notification_id': novo_id });
+		}
+	}
+	else{
+		// armazena o primeiro ID de notificação
+		localStorage.setItem("notification_id", novo_id);
+		// apresenta a notificação
+		fnc_show_notification(notification.notificacao);
+		worker.postMessage({'cmd': 'set_time_start', 'notification_id': novo_id });
+	}
+}
+
+function fnc_show_notification(notification){
+	var notification = new Notification(notification.title, {
+      icon: notification.icon,
+      body: notification.body
+    });
+}
+
+function fnc_check_notification(notification){
+	// recebe o ID da última notificação apresentada
+	var notification_id = fnc_get_local_notification_id();
+	
+	// armazena o ID mais recente
+	fnc_set_local_notification_id(notification_id, notification);
+}
+
+function fnc_check_message(e){
+	if(typeof e.data != 'undefined'){
+		switch(e.data.cmd){
+			case 're_check':
+				worker.postMessage({'cmd': 'set_time_start', 'notification_id': fnc_get_local_notification_id() });
+				break;
+			case 'json':
+				var json = e.data.json;
+				var notification = JSON.parse(json);
+				fnc_check_notification(notification);
+				break;			
+		}
+	}
+}
+function fnc_init_worker(){
+	if (Notification.permission === "granted"){
+		worker = new Worker('worker_notify.js');
+		worker.addEventListener('message', fnc_check_message);
+		worker.postMessage({'cmd': 'start', 'notification_id': fnc_get_local_notification_id() });
+	}
+}
+
+function fnc_init(){
+	if (!Notification) {
+		alert('O seu navegador não suporta notificações. Tente utilizar o Google Chrome.'); 
+		return;
+	}
+	if (Notification.permission !== "granted"){
+		Notification.requestPermission();
+	}
+	fnc_init_worker();
+}
+
+document.addEventListener('DOMContentLoaded', fnc_init);
+
+    </script>
+
+</head>
+<body>
+    
+</body>
+</html>
