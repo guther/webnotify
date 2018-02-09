@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Teste Messaging2</title>    
+    
+    <!-- Remember to include jQuery :) -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+	<!-- jQuery Modal -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+
+    <script>
+		
+var worker;
+
+function fnc_get_local_notification_id(){
+	var notification_id = parseInt(localStorage.getItem("notification_id"));
+	// se não existe qualquer notificação no localStorage
+	if(isNaN(notification_id)){
+		return false;
+	}
+	// se existe notificação no localStorage
+	else{
+		return notification_id;
+	}
+}
+
+function fnc_set_local_notification_id(antigo_id, notification){
+	var novo_id = parseInt(notification.id);
+	
+	// se existe ID
+	if(antigo_id){
+		// checa se existe notificação mais recente
+		if(novo_id > antigo_id){
+			localStorage.setItem("notification_id", novo_id);
+			// apresenta a notificação
+			fnc_show_notification(notification.notificacao);
+			worker.postMessage({'cmd': 'set_time_start', 'notification_id': novo_id });
+		}
+	}
+	else{
+		// armazena o primeiro ID de notificação
+		localStorage.setItem("notification_id", novo_id);
+		// apresenta a notificação
+		fnc_show_notification(notification.notificacao);
+		worker.postMessage({'cmd': 'set_time_start', 'notification_id': novo_id });
+	}
+}
+
+function fnc_show_notification(notification){
+	var notification = new Notification(notification.title, {
+      icon: notification.icon,
+      body: notification.body
+    });
+    notification.onclick = 
+		function(){
+			$('#modal_notification .title').html(notification.title);
+			$('#modal_notification .body').html(notification.body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+			$('#modal_notification').modal();
+		};
+}
+
+function fnc_check_notification(notification){
+	// recebe o ID da última notificação apresentada
+	var notification_id = fnc_get_local_notification_id();
+	
+	// armazena o ID mais recente
+	fnc_set_local_notification_id(notification_id, notification);
+}
+
+function fnc_check_message(e){
+	if(typeof e.data != 'undefined'){
+		switch(e.data.cmd){
+			case 're_check':
+				worker.postMessage({'cmd': 'set_time_start', 'notification_id': fnc_get_local_notification_id() });
+				break;
+			case 'json':
+				var json = e.data.json;
+				var notification = JSON.parse(json);
+				fnc_check_notification(notification);
+				break;			
+		}
+	}
+}
+function fnc_init_worker(){
+	if (Notification.permission === "granted"){
+		worker = new Worker('worker_notify.js');
+		worker.addEventListener('message', fnc_check_message);
+		worker.postMessage({'cmd': 'start', 'notification_id': fnc_get_local_notification_id() });
+	}
+}
+
+function fnc_init(){
+	if (!Notification) {
+		alert('O seu navegador não suporta notificações. Tente utilizar o Google Chrome.'); 
+		return;
+	}
+	if (Notification.permission !== "granted"){
+		Notification.requestPermission().then(function(result) {
+		  if (result === 'denied') {
+			alert('Por favor, permita as notificações dos eventos para manter-se atualizado.');
+			return;
+		  }
+		  if (result === 'default') {
+			alert('Por favor, permita as notificações dos eventos para manter-se atualizado.');
+			return;
+		  }
+		  alert(result);
+		  fnc_init_worker();
+		});
+	}
+	else{
+		fnc_init_worker();	
+	}
+}
+
+document.addEventListener('DOMContentLoaded', fnc_init);
+
+    </script>
+
+</head>
+<body>
+	Teste de recebimento de notíficação.<br>
+	Mantenha essa página aberta.<br>
+	Você pode utilizar outros aplicativos, mas não pode encerrar a execução deste navegador.
+	<!-- Modal HTML embedded directly into document -->
+<div id="modal_notification" class="modal">
+  <h1 class="title"></h1>
+  <p class="body">Thanks for clicking. That felt good.</p>
+  <a href="#" rel="modal:close">[Fechar]</a>
+</div>
+    
+</body>
+</html>
