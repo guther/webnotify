@@ -1,5 +1,10 @@
 <?php
-$servername = $_ENV["MYSQL_HOST"];;
+
+var_dump($_ENV);
+exit;
+
+
+$servername = $_ENV["MYSQL_HOST"];
 $username = $_ENV["MYSQL_USER"];
 $password = $_ENV["MYSQL_PWD"];
 $db = $_ENV["MYSQL_DB"];
