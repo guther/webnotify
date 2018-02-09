@@ -15,7 +15,7 @@ self.addEventListener('message', function(e) {
   };
 }, false);
 
-function fnc_is_json_string(str) {
+function fnc_is_json_string(str){
     try {
         JSON.parse(str);
     }
