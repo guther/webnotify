@@ -100,10 +100,16 @@ function fnc_show_notification(notification){
 					  tag: 'vibration-sample'
 					});
 			}
+			
+			
+			self.onnotificationclick = function(event) { alert(1233)};
+			
 		);
 		
+		ServiceWorkerGlobalScope.onnotificationclick = function(NotificationEvent) { alert(3333) };
+		
 	}
-	alert(99)
+	
 }
 function fnc_init_worker(){
 	
