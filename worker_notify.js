@@ -29,7 +29,7 @@ function fnc_init_check_notify(notification_id){
 	
 	var param = typeof(notification_id)=="number"?notification_id:0;
 	
-	var ajaxurl = 'http://localhost/notificacoes.php?id='+param;
+	var ajaxurl = 'notificacoes.php?id='+param;
 	var xmlHttp = ajax();
 	if(xmlHttp){
 		xmlHttp.onreadystatechange=function(){
