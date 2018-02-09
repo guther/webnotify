@@ -4,9 +4,9 @@ $username = $_ENV["MYSQL_USER"];
 $password = $_ENV["MYSQL_PWD"];
 $db = $_ENV["MYSQL_DB"];
 try {
-    $conn = new PDO("mysql:host=$servername;dbname=$db", $username, $password);
+    $conn = new PDO("mysql:host=$servername;dbname=$db;charset=utf8", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connected successfully!";
+   // echo "Connected successfully!";
 }
 catch(PDOException $e){
     echo "Connection failed: " . $e->getMessage();
@@ -26,10 +26,10 @@ $notificacoes = [];
 
 
 for($i=0; $row = $st->fetch(PDO::FETCH_ASSOC); $i++){
-	$icon = empty($row["icon"])?"http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png":$row["icon"];
+	$icon = empty($row["icon"])?"http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png":$row["icon"];	
 	$notificacoes[$row["id"]] = ["id" => $row["id"], "notificacao" => ["icon" => $icon,
 																		"title" => $row["title"],
-																		"body" => $row["body"]]];	
+																		"body" => $row["body"] ]];
 }
 
 $json = false;
