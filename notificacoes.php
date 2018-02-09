@@ -24,7 +24,8 @@ $st->execute([$id]);
 
 $notificacoes = [];
 
-for($i=0; $row = $query->fetch(); $i++){
+
+for($i=0; $row = $st->fetch(PDO::FETCH_ASSOC); $i++){
 	$icon = empty($row["icon"])?"http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png":$row["icon"];
 	$notificacoes[$row["id"]] = ["id" => $row["id"], "notificacao" => ["icon" => $icon,
 																		"title" => $row["title"],
