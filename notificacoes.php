@@ -11,7 +11,7 @@ $notificacoes = [];
 $notificacoes[1] = ["id" => 1, "notificacao" => ["icon" => "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png", "title" => "Titulo 1", "body" => "Hey there! You've been notified!"]];
 $notificacoes[2] = ["id" => 2, "notificacao" => ["icon" => "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png", "title" => "Titulo 2", "body" => "Notificacao 2"]];
 $notificacoes[3] = ["id" => 3, "notificacao" => ["icon" => "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png", "title" => "Titulo 3", "body" => "Notificacao 3 !!!"]];
-$notificacoes[5] = ["id" => 5, "notificacao" => ["icon" => "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png", "title" => "Titulo Teste", "body" => "Notificacao Qualquer."]];
+//$notificacoes[4] = ["id" => 4, "notificacao" => ["icon" => "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png", "title" => "Titulo Teste", "body" => "Notificacao Qualquer."]];
 
 $json = false;
 

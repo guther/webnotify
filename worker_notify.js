@@ -5,7 +5,7 @@ self.addEventListener('message', function(e) {
       fnc_init_check_notify(data.notification_id);
       break;
     case 'set_time_start':
-      setTimeout(function(){fnc_init_check_notify(data.notification_id);},5000);
+      setTimeout(function(){fnc_init_check_notify(data.notification_id);},30000);
       break;
     case 'stop':
       self.close(); // Encerra o worker
