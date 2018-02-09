@@ -19,7 +19,7 @@ else
 	$id = 0;
 	
 
-$st = $conn->prepare("select * from tb_notifications where id > ? order by id asc");
+$st = $conn->prepare("select * from tb_notifications where enabled=1 and id > ? order by id asc");
 $st->execute([$id]);
 
 $notificacoes = [];
