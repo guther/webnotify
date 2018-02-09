@@ -59,7 +59,7 @@ function fnc_show_notification(notification){
     notification.onclick = 
 		function(){
 			$('#modal_notification .title').html(notification.title);
-			$('#modal_notification .body').html(notification.body);
+			$('#modal_notification .body').html(notification.body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
 			$('#modal_notification').modal();
 		};
 }
