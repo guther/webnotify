@@ -87,6 +87,7 @@ function fnc_show_notification(notification){
 				$('#modal_notification .body').html(notification.body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
 				$('#modal_notification').modal();
 			};
+	}
 	catch(e){
 		navigator.serviceWorker.register('worker_notify.js');
 		
