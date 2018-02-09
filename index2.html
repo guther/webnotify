@@ -52,23 +52,25 @@ function fnc_set_local_notification_id(antigo_id, notification){
 }
 
 function fnc_show_notification(notification){
-	var notification = new Notification(notification.title, {
+	alert(77);
+	alert(notification)
+	var n = new Notification(notification.title, {
       icon: notification.icon,
       body: notification.body
     });
-    notification.onclick = 
+    alert(n);
+    n.onclick = 
 		function(){
 			$('#modal_notification .title').html(notification.title);
 			$('#modal_notification .body').html(notification.body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
 			$('#modal_notification').modal();
 		};
+	alert(99)
 }
 
 function fnc_check_notification(notification){
 	// recebe o ID da última notificação apresentada
 	var notification_id = fnc_get_local_notification_id();
-	
-	alert(notification_id);
 	
 	// armazena o ID mais recente
 	fnc_set_local_notification_id(notification_id, notification);
@@ -82,7 +84,6 @@ function fnc_check_message(e){
 				break;
 			case 'json':
 				var json = e.data.json;
-				alert(json);
 				var notification = JSON.parse(json);
 				fnc_check_notification(notification);
 				break;			
@@ -91,7 +92,6 @@ function fnc_check_message(e){
 }
 function fnc_init_worker(){
 	if (Notification.permission === "granted"){
-		alert(123);
 		worker = new Worker('worker_notify.js');
 		worker.addEventListener('message', fnc_check_message);
 		worker.postMessage({'cmd': 'start', 'notification_id': fnc_get_local_notification_id() });
