@@ -15,13 +15,38 @@ catch(PDOException $e){
 
 
 try {
-    $dbh = new PDO('mysql:host=localhost;dbname=db_notify', $username, $password);   
+    $conn = new PDO("mysql:host=localhost;dbname=$db", $username, $password);
+    // set the PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "Connected successfully!";
 }
-catch (PDOException $e) {
-    print "Error!: " . $e->getMessage() . "<br/>";
+catch(PDOException $e){
+    echo "Connection failed: " . $e->getMessage();
 }
 
-var_dump($servername, $username, $password, $db);
+
+try {
+    $conn = new PDO("mysql:host=127.0.0.1;dbname=$db", $username, $password);
+    // set the PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "Connected successfully!";
+}
+catch(PDOException $e){
+    echo "Connection failed: " . $e->getMessage();
+}
+
+
+try {
+    $conn = new PDO("mysql:host=172.30.95.107;dbname=$db", $username, $password);
+    // set the PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "Connected successfully!";
+}
+catch(PDOException $e){
+    echo "Connection failed: " . $e->getMessage();
+}
+
+
 
 exit;
 
