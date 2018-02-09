@@ -52,16 +52,43 @@ function fnc_set_local_notification_id(antigo_id, notification){
 }
 
 function fnc_show_notification(notification){
-	var notification = new Notification(notification.title, {
-      icon: notification.icon,
-      body: notification.body
-    });
-    notification.onclick = 
-		function(){
-			$('#modal_notification .title').html(notification.title);
-			$('#modal_notification .body').html(notification.body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
-			$('#modal_notification').modal();
-		};
+	
+	try{
+		var n = new Notification(notification.title, {
+		  icon: notification.icon,
+		  body: notification.body
+		});
+		n.onclick = 
+			function(){
+				fnc_show_popup_html_notification(notification);
+			};
+	}
+	catch(e){
+			
+		navigator.serviceWorker.register('worker_notify.js');
+	
+		navigator.serviceWorker.addEventListener('message', fnc_check_message);
+		
+		navigator.serviceWorker.ready.then(
+			function(registration) {
+				registration.showNotification(notification.title, {
+					  body: notification.body,
+					  icon: notification.icon,
+					  renotify: true,
+					  onclick: function(){console.log("guther")},
+					  vibrate: [200, 100, 200, 100, 200, 100, 200],
+					  tag: 'vibration-sample'
+					});
+		});
+	
+	
+	}
+}
+
+function fnc_show_popup_html_notification(notification){
+	$('#modal_notification .title').html(notification.title);
+	$('#modal_notification .body').html(notification.body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+	$('#modal_notification').modal();
 }
 
 function fnc_check_notification(notification){
@@ -82,7 +109,10 @@ function fnc_check_message(e){
 				var json = e.data.json;
 				var notification = JSON.parse(json);
 				fnc_check_notification(notification);
-				break;			
+				break;	
+			case 'show_popup_html_notification':
+				fnc_show_popup_html_notification(e.data.notification);
+				break;		
 		}
 	}
 }

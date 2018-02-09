@@ -10,8 +10,6 @@ self.addEventListener('message', function(e) {
     case 'stop':
       self.close(); // Encerra o worker
       break;
-    default:
-      self.postMessage('Unknown command: ' + data.msg);
   };
 }, false);
 
@@ -64,3 +62,42 @@ function ajax() {
     }
     return xmlHttp;
 }
+
+self.onnotificationclick = function(NotificationEvent) {
+	
+	let url = NotificationEvent.target.origin;
+    NotificationEvent.notification.close(); // Android needs explicit close.
+    NotificationEvent.waitUntil(
+        clients.matchAll({type: 'window', includeUncontrolled: true}).then( windowClients => {
+            // Check if there is already a window/tab open with the target URL
+            for (var i = 0; i < windowClients.length; i++) {
+                var client = windowClients[i];
+                // If so, just focus it.
+                if (client.url.indexOf(url)>-1 && 'focus' in client) {
+                    client.focus();
+                    var notification = {title: NotificationEvent.notification.title,
+										body: NotificationEvent.notification.body,
+										icon:NotificationEvent.notification.icon};
+                    
+                    client.postMessage({'cmd':'show_popup_html_notification','notification':notification});
+                    return;
+                }
+            }
+            // If not, then open the target URL in a new window/tab.
+            if (clients.openWindow) {
+                return clients.openWindow(url);
+            }
+        })
+    );
+	
+	
+	
+	
+	
+	
+	
+	
+	
+};
+
+

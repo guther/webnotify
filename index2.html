@@ -69,13 +69,17 @@ function fnc_check_message(e){
 				var json = e.data.json;
 				var notification = JSON.parse(json);
 				fnc_check_notification(notification);
-				break;			
+				break;
+			case 'show_popup_html_notification':
+				fnc_show_popup_html_notification(e.data.notification);
+				break;
+			default:
+				console.log(e.data);
 		}
 	}
 }
 function fnc_show_notification(notification){
-	alert(77);
-	alert(notification.title)
+	
 	try{
 		var n = new Notification(notification.title, {
 		  icon: notification.icon,
@@ -83,32 +87,38 @@ function fnc_show_notification(notification){
 		});
 		n.onclick = 
 			function(){
-				$('#modal_notification .title').html(notification.title);
-				$('#modal_notification .body').html(notification.body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
-				$('#modal_notification').modal();
+				fnc_show_popup_html_notification(notification);
 			};
 	}
 	catch(e){
+			
 		navigator.serviceWorker.register('worker_notify.js');
+	
+		navigator.serviceWorker.addEventListener('message', fnc_check_message);
 		
 		navigator.serviceWorker.ready.then(
 			function(registration) {
 				registration.showNotification(notification.title, {
 					  body: notification.body,
 					  icon: notification.icon,
+					  renotify: true,
+					  onclick: function(){console.log("guther")},
 					  vibrate: [200, 100, 200, 100, 200, 100, 200],
 					  tag: 'vibration-sample'
 					});
-				
-				registration.onnotificationclick = function(event) { alert(1233)};
-				
 		});
-		
-		ServiceWorkerGlobalScope.onnotificationclick = function(NotificationEvent) { alert(3333) };
-		
-	}
 	
+	
+	}
 }
+
+
+function fnc_show_popup_html_notification(notification){
+	$('#modal_notification .title').html(notification.title);
+	$('#modal_notification .body').html(notification.body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+	$('#modal_notification').modal();
+}
+
 function fnc_init_worker(){
 	
 		var notification = {"id":"1","notificacao":{"icon":"http:\/\/cdn.sstatic.net\/stackexchange\/img\/logos\/so\/so-icon.png","title":"Notifica\u00e7\u00e3o Alt Lab 1","body":"Descri\u00e7\u00e3o qualquer.\r\nPiada curta: Conversa de casados: Querido, o que voc\u00ea prefere? Uma mulher bonita ou uma mulher inteligente?\r\nNem uma, nem outra. Voc\u00ea sabe que eu s\u00f3 gosto de voc\u00ea. "}};
@@ -135,7 +145,7 @@ function fnc_init(){
 		});
 	}
 	else{
-		fnc_init_worker();	
+		fnc_init_worker();
 	}
 }
 
